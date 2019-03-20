@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">OpiniaoDeTudo</string>
+    <string name="form_title">Nova Opinião</string>
+    <string name="form_review_name">Nome</string>
+    <string name="form_review_opinion">Opinião</string>
+    <string name="form_button_save">GRAVAR</string>
+    <string name="menu_list_reviews_label">Lista de Opiniões</string>
+    <string name="item_list_edit">Modificar</string>
+    <string name="item_list_delete">Apagar</string>
+</resources>
