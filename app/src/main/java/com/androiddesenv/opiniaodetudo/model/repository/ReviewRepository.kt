@@ -20,4 +20,12 @@ class ReviewRepository {
     fun listAll(): List<Review> {
         return reviewDao.listAll()
     }
+
+    fun delete(item: Review) {
+        return reviewDao.delete(item)
+    }
+
+    fun update(id: String, name: String, review: String) {
+        reviewDao.update(Review(id, name, review))
+    }
 }
