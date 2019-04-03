@@ -1,5 +1,7 @@
 package com.androiddesenv.opiniaodetudo
 
+import android.arch.lifecycle.Observer
+import android.arch.lifecycle.ViewModelProviders
 import android.content.Intent
 import android.os.AsyncTask
 import android.os.Bundle
@@ -13,6 +15,7 @@ import android.widget.PopupMenu
 import android.widget.TextView
 import com.androiddesenv.opiniaodetudo.model.Review
 import com.androiddesenv.opiniaodetudo.model.repository.ReviewRepository
+import com.androiddesenv.opiniaodetudo.viewmodel.EditReviewViewModel
 
 class ListFragment : Fragment() {
     private lateinit var reviews: MutableList<Review>
@@ -25,6 +28,8 @@ class ListFragment : Fragment() {
         val listView = rootView.findViewById<ListView>(R.id.list_recyclerview)
         initList(listView)
         configureOnLongClick(listView)
+        configureListObserver()
+
         return rootView
     }
 
@@ -88,9 +93,10 @@ class ListFragment : Fragment() {
     }
 
     private fun openItemForEdition(item: Review) {
-        val intent = Intent(activity!!, MainActivity::class.java)
-        intent.putExtra("item", item)
-        startActivity(intent)
+        val reviewViewModel = ViewModelProviders.of(activity!!).get(EditReviewViewModel::class.java)
+        val data = reviewViewModel.data
+        data.value = item
+        EditDialogFragment().show(fragmentManager, "edit_dialog")
     }
 
     override fun onResume() {
@@ -106,5 +112,12 @@ class ListFragment : Fragment() {
                 adapter.notifyDataSetChanged()
             }
         }.execute()
+    }
+
+    private fun configureListObserver() {
+        val reviewViewModel = ViewModelProviders.of(activity!!).get(EditReviewViewModel::class.java)
+        reviewViewModel.data.observe(this, Observer {
+            onResume()
+        })
     }
 }
