@@ -47,18 +47,22 @@ class FormFragment : Fragment(){
         buttonSave.setOnClickListener {
             val name = textViewName.text
             val review = textViewReview.text
-            object : AsyncTask<Void, Void, Unit>() {
-                override fun doInBackground(vararg params: Void?) {
+            object : AsyncTask<Void, Void, Review>() {
+                override fun doInBackground(vararg params: Void?): Review {
                     val repository = ReviewRepository(activity!!.applicationContext)
+                    var entity: Review
                     if (reviewToEdit == null) {
-                        repository.save(name.toString(), review.toString(),
+                        entity = repository.save(name.toString(),
+                            review.toString(),
                             file!!.toRelativeString(activity!!.filesDir), thumbnailBytes)
-                        val i = Intent(activity!!.applicationContext, ListActivity::class.java)
-                        startActivity(i)
                     } else {
-                        repository.update(reviewToEdit.id, name.toString(), review.toString())
-                        activity!!.finish()
+                        entity = repository.update(reviewToEdit.id, name.toString(), review.toString())
                     }
+                    (activity as MainActivity).navigateTo(MainActivity.LIST_FRAGMENT)
+                    return entity
+                }
+                override fun onPostExecute(result: Review) {
+                    updateReviewLocation(result)
                 }
             }.execute()
             true
@@ -105,6 +109,17 @@ class FormFragment : Fragment(){
         val thumbnailOutputStream = ByteArrayOutputStream()
         thumbnail.compress(Bitmap.CompressFormat.PNG, targetSize, thumbnailOutputStream)
         thumbnailBytes = thumbnailOutputStream.toByteArray()
+    }
+
+    private fun updateReviewLocation(entity: Review) {
+        LocationService(activity!!).onLocationObtained{ lat,long ->
+            val repository = ReviewRepository(activity!!.applicationContext)
+            object: AsyncTask<Void, Void, Unit>() {
+                override fun doInBackground(vararg params: Void?) {
+                    repository.updateLocation(entity, lat, long)
+                }
+            }.execute()
+        }
     }
 
 }

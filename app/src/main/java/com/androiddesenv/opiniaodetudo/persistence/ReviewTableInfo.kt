@@ -7,4 +7,6 @@ object ReviewTableInfo{
     const val COLUMN_REVIEW = "review"
     const val COLUMN_PHOTO_PATH = "photo_path"
     const val COLUMN_THUMBNAIL = "thumbnail"
+    const val COLUMN_LATITUDE = "latitude"
+    const val COLUMN_LONGITUDE = "longitude"
 }

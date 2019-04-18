@@ -6,5 +6,14 @@
     <item
             android:id="@+id/item_list_delete"
             android:title="@string/item_list_delete" />
+    <item
+            android:id="@+id/item_list_map"
+            android:title="@string/item_list_map"
+            android:visible="false"
+    />
+    <item
+            android:id="@+id/item_list_upload"
+            android:title="@string/upload"
+    />
 
 </menu>

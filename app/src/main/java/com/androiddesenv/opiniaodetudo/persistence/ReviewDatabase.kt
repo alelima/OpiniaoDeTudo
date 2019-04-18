@@ -9,7 +9,7 @@ import android.content.Context
 import com.androiddesenv.opiniaodetudo.model.Review
 
 //Essa classe é só uma configuração, o ROM cria o database e retorna o DAO pra mim
-@Database(entities = arrayOf(Review::class), version = 3)
+@Database(entities = arrayOf(Review::class), version = 4)
 abstract class ReviewDatabase : RoomDatabase(){
     companion object {
         private var instance: ReviewDatabase? = null
@@ -21,11 +21,19 @@ abstract class ReviewDatabase : RoomDatabase(){
                         "ADD COLUMN ${ReviewTableInfo.COLUMN_THUMBNAIL} BLOB")
             }
         }
+        private var migration_3_4 = object: Migration(2,3){
+            override fun migrate(database: SupportSQLiteDatabase) {
+                database.execSQL("ALTER TABLE ${ReviewTableInfo.TABLE_NAME} " +
+                        "ADD COLUMN ${ReviewTableInfo.COLUMN_LATITUDE} REAL")
+                database.execSQL("ALTER TABLE ${ReviewTableInfo.TABLE_NAME} " +
+                        "ADD COLUMN ${ReviewTableInfo.COLUMN_LONGITUDE} REAL")
+            }
+        }
         fun getInstance(context: Context): ReviewDatabase {
             if(instance == null){
                 instance = Room
                     .databaseBuilder(context, ReviewDatabase::class.java, "review_database")
-                    .addMigrations(migration_2_3)
+                    .addMigrations(migration_3_4)
                     .fallbackToDestructiveMigration()
                     .build()
             }

@@ -14,8 +14,10 @@ class ReviewRepository {
         reviewDao = reviewDatabase.reviewDao()
     }
 
-    fun save(name: String, review: String, photoPath: String?, thumbnailBytes: ByteArray?) {
-        reviewDao.save(Review(UUID.randomUUID().toString(), name, review, photoPath, thumbnailBytes))
+    fun save(name: String, review: String, photoPath: String?, thumbnailBytes: ByteArray?):Review {
+        val review = Review(UUID.randomUUID().toString(), name, review, photoPath, thumbnailBytes)
+        reviewDao.save(review)
+        return review
     }
     fun listAll(): List<Review> {
         return reviewDao.listAll()
@@ -25,11 +27,19 @@ class ReviewRepository {
         return reviewDao.delete(item)
     }
 
-    fun update(id: String, name: String, review: String) {
-        reviewDao.update(Review(id, name, review))
+    fun update(id: String, name: String, review: String): Review {
+        val review = Review(id, name, review)
+        reviewDao.update(review)
+        return review
     }
 
     fun update(review: Review) {
         reviewDao.update(review)
+    }
+
+    fun updateLocation(entity: Review, lat: Double, long: Double) {
+        entity.latitude = lat
+        entity.longitude = long
+        reviewDao.update(entity)
     }
 }

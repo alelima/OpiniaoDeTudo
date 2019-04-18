@@ -7,7 +7,12 @@
     <string name="menu_list_reviews_label">Lista de Opiniões</string>
     <string name="item_list_edit">Modificar</string>
     <string name="item_list_delete">Apagar</string>
+    <string name="item_list_map">Mapa</string>
     <string name="new_item">Novo Item</string>
     <string name="list_item">Listar Itens</string>
     <string name="form_picture_name">Foto</string>
+    <string name="night_mode">Modo Noturno</string>
+    <string name="summary_night_mode">No modo noturno as cores do aplicativo ficam escuras</string>
+    <string name="settings">Configurações</string>
+    <string name="upload">Enviar Opinião</string>
 </resources>
