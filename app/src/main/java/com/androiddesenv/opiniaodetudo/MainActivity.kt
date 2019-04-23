@@ -14,12 +14,14 @@ import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
 import android.support.v4.content.ContextCompat
 import android.support.v7.preference.PreferenceManager
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.inputmethod.InputMethodManager
 import android.widget.*
 import com.androiddesenv.opiniaodetudo.model.Review
 import com.androiddesenv.opiniaodetudo.model.repository.ReviewRepository
+import com.google.firebase.iid.FirebaseInstanceId
 
 class MainActivity : AppCompatActivity() {
 
@@ -30,6 +32,8 @@ class MainActivity : AppCompatActivity() {
         val LIST_FRAGMENT = "listFragment"
         const val SETTINGS_FRAGMENT = "settingsFragment"
         val GPS_PERMISSION_REQUEST = 101
+        val PUSH_NOTIFICATION_MESSAGE_REQUEST = 1232
+        val PUSH_NOTIFICATION_CHANNEL = "PushNotificationChannel"
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -42,6 +46,18 @@ class MainActivity : AppCompatActivity() {
         configureBottomMenu()
         configureAutoHiddenKeyboard()
         askForGPSPermission()
+        logToken()
+    }
+
+    private fun logToken() {
+        FirebaseInstanceId.getInstance().instanceId.addOnCompleteListener { task ->
+            if (!task.isSuccessful) {
+                Log.w("TOKEN_FCM", task.exception)
+            } else {
+                val token = task.result?.token
+                Log.d("TOKEN_FCM", "logToken:${token}")
+            }
+        }
     }
 
     private fun configureAutoHiddenKeyboard() {
