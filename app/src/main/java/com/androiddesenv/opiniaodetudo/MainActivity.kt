@@ -34,6 +34,9 @@ class MainActivity : AppCompatActivity() {
         val GPS_PERMISSION_REQUEST = 101
         val PUSH_NOTIFICATION_MESSAGE_REQUEST = 1232
         val PUSH_NOTIFICATION_CHANNEL = "PushNotificationChannel"
+        const val NEW_REVIEW_NOTIFICATION_MESSAGE_REQUEST = 1233
+        const val DELETE_NOTIFICATION_ACTION_NAME = "DELETE"
+        const val DELETE_NOTIFICATION_EXTRA_NAME = "REVIEW_TO_DELETE"
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -147,4 +150,28 @@ class MainActivity : AppCompatActivity() {
             .commit()
     }
 
+    override fun onNewIntent(intent: Intent?) {
+        super.onNewIntent(intent)
+        deleteReview(intent)
+    }
+
+    private fun deleteReview(intent: Intent?) {
+        if(intent?.action == DELETE_NOTIFICATION_ACTION_NAME){
+            val id = intent.getStringExtra(DELETE_NOTIFICATION_EXTRA_NAME)
+            ReviewRepository(this.applicationContext).delete(id)
+        }
+    }
+
+    /*
+    private fun deleteReview(intent: Intent?) {
+        val id = intent?.getStringExtra(DELETE_NOTIFICATION_EXTRA_NAME)
+        if(intent?.action == DELETE_NOTIFICATION_ACTION_NAME){
+            object : AsyncTask<Void, Void, Unit>() {
+                override fun doInBackground(vararg params: Void?) {
+                    ReviewRepository(this@MainActivity.applicationContext).delete(id)
+                }
+            }
+        }
+    }
+     */
 }

@@ -2,6 +2,7 @@ package com.androiddesenv.opiniaodetudo
 
 import android.app.Activity
 import android.app.Activity.*
+import android.app.PendingIntent
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
@@ -10,6 +11,8 @@ import android.os.AsyncTask
 import android.os.Bundle
 import android.provider.MediaStore
 import android.support.v4.app.Fragment
+import android.support.v4.app.NotificationCompat
+import android.support.v4.app.NotificationManagerCompat
 import android.support.v4.content.FileProvider
 import android.view.LayoutInflater
 import android.view.View
@@ -31,6 +34,7 @@ class FormFragment : Fragment(){
 
     companion object {
         val TAKE_PICTURE_RESULT = 101
+        val NEW_REVIEW_MESSAGE_ID = 4584
     }
     private var file: File? = null
 
@@ -63,6 +67,7 @@ class FormFragment : Fragment(){
                 }
                 override fun onPostExecute(result: Review) {
                     updateReviewLocation(result)
+                    showReviewNotification(result)
                 }
             }.execute()
             true
@@ -120,6 +125,57 @@ class FormFragment : Fragment(){
                 }
             }.execute()
         }
+    }
+
+    private fun showReviewNotification(review: Review) {
+
+        val builder = NotificationCompat.Builder(
+            activity!!,
+            MainActivity.PUSH_NOTIFICATION_CHANNEL)
+            .setSmallIcon(R.drawable.small_launcher)
+            .setContentTitle("Nova opinião no Opini")
+            .setContentText(review.name)
+
+        if(review.thumbnail != null){
+            val thumbnail =
+                BitmapFactory
+                    .decodeByteArray(review.thumbnail, 0, review.thumbnail!!.size)
+            val photo =
+                BitmapFactory
+                    .decodeFile(File(activity!!.filesDir, review.photoPath).absolutePath)
+            builder.setLargeIcon(thumbnail)
+            builder.setStyle(
+                NotificationCompat.BigPictureStyle()
+                    .bigPicture(photo)
+                    .bigLargeIcon(null)
+            )
+        }else{
+            builder.setStyle(
+                NotificationCompat.BigTextStyle()
+                    .setBigContentTitle(review.name)
+                    .bigText(review.review)
+            )
+        }
+
+        //Ação de deletar na notificação
+        val deletePendingIntent = createDeletePendingIntent(review)
+        builder.addAction(0, "Apagar", deletePendingIntent)
+
+        NotificationManagerCompat
+            .from(activity!!).notify(NEW_REVIEW_MESSAGE_ID, builder.build())
+    }
+
+    private fun createDeletePendingIntent(review: Review) : PendingIntent {
+        val deleteIntent = Intent(activity!!, MainActivity::class.java)
+        deleteIntent.action = MainActivity.DELETE_NOTIFICATION_ACTION_NAME
+        deleteIntent.putExtra(MainActivity.DELETE_NOTIFICATION_EXTRA_NAME, review.id)
+
+        return PendingIntent.getActivity(
+                activity!!,
+                MainActivity.NEW_REVIEW_NOTIFICATION_MESSAGE_REQUEST,
+                deleteIntent,
+                PendingIntent.FLAG_UPDATE_CURRENT
+            )
     }
 
 }
