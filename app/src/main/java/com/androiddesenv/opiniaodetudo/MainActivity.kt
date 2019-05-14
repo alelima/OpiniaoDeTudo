@@ -26,11 +26,12 @@ import com.google.firebase.iid.FirebaseInstanceId
 class MainActivity : AppCompatActivity() {
 
     private val fragments = mapOf(FORM_FRAGMENT to ::FormFragment, LIST_FRAGMENT to ::ListFragment,
-        SETTINGS_FRAGMENT to ::SettingsFragment)
+        SETTINGS_FRAGMENT to ::SettingsFragment, ONLINE_FRAGMENT to ::OnlineFragment)
     companion object {
         val FORM_FRAGMENT = "formFragment"
         val LIST_FRAGMENT = "listFragment"
         const val SETTINGS_FRAGMENT = "settingsFragment"
+        const val ONLINE_FRAGMENT = "onlineFragment"
         val GPS_PERMISSION_REQUEST = 101
         val PUSH_NOTIFICATION_MESSAGE_REQUEST = 1232
         val PUSH_NOTIFICATION_CHANNEL = "PushNotificationChannel"
@@ -91,6 +92,7 @@ class MainActivity : AppCompatActivity() {
                 R.id.menuitem_newitem -> navigateTo(FORM_FRAGMENT)
                 R.id.menuitem_listitem -> navigateTo(LIST_FRAGMENT)
                 R.id.menuitem_settings -> navigateTo(SETTINGS_FRAGMENT)
+                R.id.menuitem_online -> navigateTo(ONLINE_FRAGMENT)
             }
             true
         }

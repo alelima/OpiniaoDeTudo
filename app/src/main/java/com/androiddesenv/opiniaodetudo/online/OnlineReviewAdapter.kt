@@ -5,17 +5,18 @@ import android.os.AsyncTask
 import android.support.v7.widget.RecyclerView
 import android.util.Base64
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import com.androiddesenv.opiniaodetudo.R
 import com.androiddesenv.opiniaodetudo.model.Review
 import okhttp3.OkHttpClient
+import okhttp3.Request
 import org.json.JSONArray
 import org.json.JSONObject
 
-/*
-class OnlineReviewAdapter : RecyclerView.Adapter<ReviewViewHolder> {
+class OnlineReviewAdapter : RecyclerView.Adapter<OnlineReviewAdapter.ReviewViewHolder> {
     constructor() : super(){
         loadList()
     }
@@ -72,6 +73,9 @@ class OnlineReviewAdapter : RecyclerView.Adapter<ReviewViewHolder> {
             .inflate(R.layout.review_list_item_layout, null)
         return ReviewViewHolder(itemView)
     }
+
+    class ReviewViewHolder(val reviewItemView: View) : RecyclerView.ViewHolder(reviewItemView)
+
 }
 
 private fun JSONObject.toReview(): Review {
@@ -91,4 +95,6 @@ private fun JSONObject.toReview(): Review {
 
 private fun String.fromBase64(): ByteArray? {
     return Base64.decode(this, Base64.DEFAULT)
-} */
+}
+
+
